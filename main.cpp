@@ -1,37 +1,24 @@
+#include <iostream>
 #include <stdio.h>        /* for printf() and fprintf() */
-//#include <socket2.h>   /* for socket(), connect(), send(), and recv() */
-
-//#include <arpa/inet.h>    /* for sockaddr_in and inet_addr() */ winsock2
 #include <stdlib.h>       /* for atoi() */
 #include <string.h>       /* for memset() */
 #include <unistd.h>       /* for close() */
-#define RCVBUFSIZE 32     /* Size of receive buffer */
-//#include <netdb.h>
-//#include "in"
-#include <sys/types.h> /* See NOTES */
+#include <sys/types.h>
 #include <sys/stat.h>
-
-#include <iostream>
-//#include <socsys/socket.h>
-//#include <arpa/inet.h>
-//#include <sys/stat.h>
-//#include <sys/sendfile.h>
 #include <fcntl.h>
-//#include "socket.hh"
 #include "ftp.h"
+
+#define RCVBUFSIZE 32     /* Size of receive buffer */
 
 // ----------------------------------------------------------------------------
 
-
 using namespace std;
-
-//#define FILENAME 	"1.txt"
-
 
 // ----------------------------------------------------------------------------
 
 int ftpSendFile(char * buf, char * host, int port);
 int ftpRecvResponse(int sock, char * buf);
+
 int main(int argc, char *argv[])
 {
     int sock;                          /*  Socket descriptor */
@@ -52,34 +39,34 @@ int main(int argc, char *argv[])
     unsigned int echoStringLen;        /* Length of string to echo */
     int bytesRcvd, totalBytesRcvd;     /* Bytes read in single recv()
                                            and total bytes read */
-//host_name = "puler";
+host_name = "";
                                  /* First arg' server IP address (dotted quad) */
 /*servlP = argv[0] ;*/
  servlP = "217.117.129.205";                                /* Second arg' string to echo */
  servlP = "127.0.0.1";                                /* Second arg' string to echo */
+ host_name = "test";
+ const char *pass = "test"; // password
 
-/*echoString = argv[2] ;*/
-char buf[1024];
 
-//  const char *host_name = NULL; // server name
-//  const char *user_name = NULL; // user name
-  const char *pass = "test"; // password
+ /*echoString = argv[2] ;*/
+ char buf[1024];
 
-ftpServPort = 21;
+ ftpServPort = 21;
 //ftpServPort = 2731;
-printf(servlP);
+
+ printf(servlP);
 
     WSADATA Data;
     WSAStartup(MAKEWORD(2, 2), &Data); // 2.2 version
 
-    printf("\nCreating Socket\n");
+//    printf("\nCreating Socket\n");
 /* Create a reliable, stream socket using TCP */
 if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-     printf(" socket () failed %d\n", sock) ;
+     printf(" \nsocket () failed %d\n", sock) ;
 
 /*Create a data socket for ftp file transfer */
 if ((dataSock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
-     printf(" data socket () failed\n") ;
+     printf(" \ndata socket () failed\n") ;
 
 /* Construct the server address structure */
 memset(&ftpServAddr, 0, sizeof(ftpServAddr));         /* Zero out structure */
@@ -89,12 +76,11 @@ ftpServAddr.sin_port           = htons(ftpServPort); /* Server port */
 
 /* Establish the connection to the echo server */
 if (connect(sock, (struct sockaddr *) &ftpServAddr, sizeof(ftpServAddr)) < 0)
-     printf(" connect () failed\n") ;
+     printf("\nconnect () failed\n") ;
 else
-    printf("Connection Successful\n");
+    printf("\nConnection Successful\n");
 
 //login(sock,host_name,"tedst");
-
 
 dataServPort = 20;
 /* Construct the server address structure */
@@ -109,22 +95,32 @@ bind(dataSock,(struct sockaddr *) &dataServAddr, sizeof(dataServAddr));
 /* LISTEN on data_socket */
 listen(dataSock, numberOfConn);
 
-gethostname(host_name, PORTBUFFER);
+if ( host_name == "")
+{
+    gethostname(host_name, PORTBUFFER);
+
+
 cout << "hostname (" << host_name << "): ";
 string buff = "";
-//getline(std::cin, buff);
+getline(std::cin, buff);
 if ( buff != "" )
     strcpy( host_name, (const char*) &buff);
-                                            host_name = "test";
-printf("*******PORT********\n");
-printf(host_name);
-printf("\n*******\n");
-/* Determine input length */
-echoStringLen = strlen(echoString) ;
-printf("Sending HTTP Request\n");
-printf(echoString);
+}
 
-login( sock, host_name, pass );
+//printf("*******PORT********\n");
+//printf(host_name);
+//printf("\n*******\n");
+/* Determine input length */
+//echoStringLen = strlen(echoString) ;
+//printf("Sending HTTP Request\n");
+//printf(echoString);
+
+
+    login( sock, host_name, pass );
+
+    p = strcpy(command, "WebGrabber.exe");                    /// wybieramy co pobieramy
+    get_file(sock, command);
+
 
 //system("pause");
 //buff = string ( "USER " + string(*host_name)+ "\r\n");
@@ -140,8 +136,7 @@ login( sock, host_name, pass );
 //send(sock, command, strlen(command), 0);
 //ftpRecvResponse(sock, buf);
 //
-p = strcpy(command, "WebGrabber.exe");                                         /// wybieramy co pobraæ
-get_file(sock, command);
+
 //
 //p = strcpy(command, "size 1.txt\r\n");
 //send(sock, command, strlen(command), 0);
@@ -198,37 +193,37 @@ get_file(sock, command);
 //    ftpRecvResponse(sock, buf);
 //system("pause");
 
-// Get a file from server
-	strcpy(command, "Get ");
-	strcat(command, FILENAME);
-	p = strcpy(command, "RECV 1.txt");
-    send(dataSock, command, strlen(command), 0);
-//	write(dataSock, command, strlen(command) );
-//ftpRecvResponse(dataSock, buf);
-	recv(dataSock, buf, 2, 0);
-//	// Variables for the file being received
-
-	int	file_size = 0,
-		file_desc = 0;
-	char	*data;
-
-	// Start receiving file
-	if (strcmp(buf, "OK") != 0) {
-
-		recv(dataSock, (char*)&file_size, sizeof(int), 0);
-		file_size = 2131291;
-		data = (char*)malloc(file_size);
-//		file_desc = open(FILENAME, O_CREAT  | O_WRONLY | O_APPEND, 0666);
-		file_desc = open(FILENAME, O_CREAT  | O_WRONLY , 0666);
-		recv(dataSock, data, file_size, 0);
-		write(file_desc, data, file_size);
-		close(file_desc);
-	}
-	else {
-
-		fprintf(stderr, "Bad request\n");
-	}
-cout << "\nLast Err: " << WSAGetLastError();
+//// Get a file from server
+//	strcpy(command, "Get ");
+//	strcat(command, FILENAME);
+//	p = strcpy(command, "RECV 1.txt");
+//    send(dataSock, command, strlen(command), 0);
+////	write(dataSock, command, strlen(command) );
+////ftpRecvResponse(dataSock, buf);
+//	recv(dataSock, buf, 2, 0);
+////	// Variables for the file being received
+//
+//	int	file_size = 0,
+//		file_desc = 0;
+//	char	*data;
+//
+//	// Start receiving file
+//	if (strcmp(buf, "OK") != 0) {
+//
+//		recv(dataSock, (char*)&file_size, sizeof(int), 0);
+//		file_size = 2131291;
+//		data = (char*)malloc(file_size);
+////		file_desc = open(FILENAME, O_CREAT  | O_WRONLY | O_APPEND, 0666);
+//		file_desc = open(FILENAME, O_CREAT  | O_WRONLY , 0666);
+//		recv(dataSock, data, file_size, 0);
+//		write(file_desc, data, file_size);
+//		close(file_desc);
+//	}
+//	else {
+//
+//		fprintf(stderr, "Bad request\n");
+//	}
+//cout << "\nLast Err: " << WSAGetLastError();
 //system("pause");
 //p = strcpy(command,"MODE S\r\n");
 //send(sock,command, strlen(command), 0);

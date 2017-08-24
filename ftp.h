@@ -1,7 +1,7 @@
 #ifndef FTP_H_INCLUDED
 #define FTP_H_INCLUDED
 
-#include <winsock2.h>
+#include <winsock2.h>   /* for sockaddr_in and inet_addr() */
 #include <WS2tcpip.h>
 #include <fstream>
 #include <iostream>
@@ -57,7 +57,8 @@ void get_response(int sock, std::string &str_rep)
 
 void send_request(int sock, const char* buf_request)
 {
-  std::cout << "request: " << buf_request << std::endl;
+  std::cout << "request: " << buf_request;
+//  std::cout << "request: " << buf_request << std::endl;
 
   //send
   send_all(sock, (void *)buf_request, strlen(buf_request));
@@ -173,6 +174,10 @@ void receive_all(int sock, const char *file_name)
   }
   fout.close();
   fclose(file);
+
+  sprintf(buf, "STREAM%s", file_name);          // to FIX
+  remove(buf);
+
 
 /// przerobiæ na  fstream
     recv_size = 2191;
