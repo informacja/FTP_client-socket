@@ -3,6 +3,7 @@
 
 #include <winsock2.h>   /* for sockaddr_in and inet_addr() */
 #include <WS2tcpip.h>
+#include <assert.h>     /* assert */
 #include <fstream>
 #include <iostream>
 
@@ -48,7 +49,15 @@ void get_response(int sock, std::string &str_rep)
   }
 
   std::string str(buf, recv_size);
-  std::cout << "response: " << str;
+  std::cout << "response: ";
+
+    HANDLE  hConsole;
+
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 0x08);
+    std::cout << str;
+    SetConsoleTextAttribute(hConsole, 0x07);
+
   str_rep = str;
   return;
 }
@@ -57,7 +66,14 @@ void get_response(int sock, std::string &str_rep)
 
 void send_request(int sock, const char* buf_request)
 {
-  std::cout << "request: " << buf_request;
+  std::cout << "request: ";
+     HANDLE  hConsole;
+
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 0x0F);
+    std::cout << buf_request;
+    SetConsoleTextAttribute(hConsole, 0x07);
+
 //  std::cout << "request: " << buf_request << std::endl;
 
   //send
@@ -273,6 +289,68 @@ void get_file( SOCKET sock_ctrl, const char *file_name)
   //close data socket
   close_socket(sock_data);
 }
+
+// ----------------------------------------------------------------------------
+//
+//void GetPrimaryIp(char* buffer, size_t buflen)
+//{
+//    assert(buflen >= 16);
+//
+//    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+////    assert(sock != -1);
+//
+//    const char* kGoogleDnsIp = "8.8.8.8";
+//    uint16_t kDnsPort = 53;
+//    struct sockaddr_in serv;
+//    memset(&serv, 0, sizeof(serv));
+//    serv.sin_family = AF_INET;
+//    serv.sin_addr.s_addr = inet_addr(kGoogleDnsIp);
+//    serv.sin_port = htons(kDnsPort);
+//
+//    int err = connect(sock, (const sockaddr*) &serv, sizeof(serv));
+////    assert(err != -1);
+//
+//    sockaddr_in name;
+//    socklen_t namelen = sizeof(name);
+//    err = getsockname(sock, (sockaddr*) &name, &namelen);
+////    assert(err != -1);
+//
+////    const char* p = inet_ntop(AF_INET, &name.sin_addr, buffer, buflen);
+////    assert(p);
+//
+//    close(sock);
+//}
+
+// ----------------------------------------------------------------------------
+
+void show_IPs( const char *servlP )
+{
+    HANDLE  hConsole;
+
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 0x08);
+    printf( servlP );
+//    cout << buf;
+
+    SetConsoleTextAttribute(hConsole, 0x07);
+
+//    ioctl(<socketfd>, SIOCGIFCONF, (struct ifconf)&buffer);
+//    char *buf = new char[256];
+//    GetPrimaryIp( buf, 256 );
+//    delete buf;
+}
+
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+
 
 
 #endif // FTP_H_INCLUDED

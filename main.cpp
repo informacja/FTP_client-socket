@@ -1,4 +1,3 @@
-#include <iostream>
 #include <stdio.h>        /* for printf() and fprintf() */
 #include <stdlib.h>       /* for atoi() */
 #include <string.h>       /* for memset() */
@@ -47,65 +46,70 @@ host_name = "";
  host_name = "test";
  const char *pass = "test"; // password
 
+ ftpServPort = 21;
+//ftpServPort = 2731;
 
  /*echoString = argv[2] ;*/
  char buf[1024];
 
- ftpServPort = 21;
-//ftpServPort = 2731;
-
- printf(servlP);
+ show_IPs( servlP);
 
     WSADATA Data;
     WSAStartup(MAKEWORD(2, 2), &Data); // 2.2 version
 
-//    printf("\nCreating Socket\n");
-/* Create a reliable, stream socket using TCP */
-if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-     printf(" \nsocket () failed %d\n", sock) ;
+    //    printf("\nCreating Socket\n");
+    /* Create a reliable, stream socket using TCP */
+    if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+         printf(" \nsocket () failed %d\n", sock) ;
 
-/*Create a data socket for ftp file transfer */
-if ((dataSock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
-     printf(" \ndata socket () failed\n") ;
-
-/* Construct the server address structure */
-memset(&ftpServAddr, 0, sizeof(ftpServAddr));         /* Zero out structure */
-ftpServAddr.sin_family         = AF_INET;              /* Internet address family */
-ftpServAddr.sin_addr.s_addr     = inet_addr(servlP);       /* Server IP address */
-ftpServAddr.sin_port           = htons(ftpServPort); /* Server port */
-
-/* Establish the connection to the echo server */
-if (connect(sock, (struct sockaddr *) &ftpServAddr, sizeof(ftpServAddr)) < 0)
-     printf("\nconnect () failed\n") ;
-else
-    printf("\nConnection Successful\n");
-
-//login(sock,host_name,"tedst");
-
-dataServPort = 20;
-/* Construct the server address structure */
-memset(&dataServAddr, 0, sizeof(dataServAddr));         /* Zero out structure */
-dataServAddr.sin_family         = AF_INET;              /* Internet address family */
-dataServAddr.sin_addr.s_addr    = htonl(INADDR_ANY);       /* Server IP address */
-dataServAddr.sin_port           = htons(dataServPort); /* Server port */
-
-/* BIND socket to (sockaddr_in) clientAddr */
-bind(dataSock,(struct sockaddr *) &dataServAddr, sizeof(dataServAddr));
-
-/* LISTEN on data_socket */
-listen(dataSock, numberOfConn);
-
-if ( host_name == "")
-{
-    gethostname(host_name, PORTBUFFER);
+    /*Create a data socket for ftp file transfer */
+//    if ((dataSock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
+//         printf(" \ndata socket () failed\n") ;
 
 
-cout << "hostname (" << host_name << "): ";
-string buff = "";
-getline(std::cin, buff);
-if ( buff != "" )
-    strcpy( host_name, (const char*) &buff);
-}
+    /* Construct the server address structure */
+    memset(&ftpServAddr, 0, sizeof(ftpServAddr));         /* Zero out structure */
+    ftpServAddr.sin_family         = AF_INET;              /* Internet address family */
+    ftpServAddr.sin_addr.s_addr     = inet_addr(servlP);       /* Server IP address */
+    ftpServAddr.sin_port           = htons(ftpServPort); /* Server port */
+
+    /* Establish the connection to the echo server */
+    if (connect(sock, (struct sockaddr *) &ftpServAddr, sizeof(ftpServAddr)) < 0)
+         printf("\nconnect () failed\n") ;
+    else
+        printf("\nConnection Successful\n");
+
+    if ( host_name == "")
+    {
+        gethostname(host_name, PORTBUFFER);
+
+
+    cout << "hostname (" << host_name << "): ";
+    string buff = "";
+    getline(std::cin, buff);
+    if ( buff != "" )
+        strcpy( host_name, (const char*) &buff);
+    }
+
+    login( sock, host_name, pass );
+
+    p = strcpy(command, "WebGrabber.exe");                    /// wybieramy co pobieramy
+    get_file(sock, command);
+
+
+//dataServPort = 20;
+///* Construct the server address structure */
+//memset(&dataServAddr, 0, sizeof(dataServAddr));         /* Zero out structure */
+//dataServAddr.sin_family         = AF_INET;              /* Internet address family */
+//dataServAddr.sin_addr.s_addr    = htonl(INADDR_ANY);       /* Server IP address */
+//dataServAddr.sin_port           = htons(dataServPort); /* Server port */
+//
+///* BIND socket to (sockaddr_in) clientAddr */
+//bind(dataSock,(struct sockaddr *) &dataServAddr, sizeof(dataServAddr));
+//
+///* LISTEN on data_socket */
+//listen(dataSock, numberOfConn);
+
 
 //printf("*******PORT********\n");
 //printf(host_name);
@@ -116,10 +120,6 @@ if ( buff != "" )
 //printf(echoString);
 
 
-    login( sock, host_name, pass );
-
-    p = strcpy(command, "WebGrabber.exe");                    /// wybieramy co pobieramy
-    get_file(sock, command);
 
 
 //system("pause");
@@ -255,7 +255,7 @@ if ( buff != "" )
 //tmpPort = 20;
 //
 //ftpRecvResponse(sock, buf);
-*buf= 'T';
+//*buf= 'T';
 //ftpSendFile(buf,host_name,20);
 
 printf("\n");     /* Print a final linefeed */
@@ -272,6 +272,8 @@ delete p;
 //  exit(0);
 
 }
+
+
 int ftpSendFile(char * buf, char * host, int port) {
    int sd;
    struct sockaddr_in pin;
