@@ -67,8 +67,8 @@ host_name = "";
 /*servlP = argv[0] ;*/
  servlP = "217.117.129.205";                                /* Second arg' string to echo */
 // servlP = "127.0.0.1";                                /* Second arg' string to echo */
- host_name = "wawpi";
- const char *pass = "ZAQ!2wsx"; // password
+ host_name = "test";
+ const char *pass = "test"; // password
 
  ftpServPort = 21;
 ftpServPort = 2731;
