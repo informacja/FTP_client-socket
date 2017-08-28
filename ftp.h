@@ -27,6 +27,7 @@ void send_all(int sock, const void *vbuf, size_t size_buf)
     if ((send_size = send(sock, buf, size_left, flags)) == -1)
     {
       std::cout << "send error: " << std::endl;
+      break;
     }
     size_left -= send_size;
     buf += send_size;
@@ -86,7 +87,7 @@ void send_request(int sock, const char* buf_request)
 int login( SOCKET sock, const char *user_name, const char *pass, int port = 21 )
 {
   char buf_request[255];
-  std::string str_server_ip;
+//  std::string str_server_ip;
   std::string str_rsp;
 
   //create the control socket
@@ -224,10 +225,10 @@ void close_socket(int sock)
 
 // ----------------------------------------------------------------------------
 
-void get_file( SOCKET sock_ctrl, const char *file_name)
+void get_file( SOCKET sock_ctrl, std::string str_server_ip, const char *file_name)
 {
   char buf_request[255];
-  std::string str_server_ip = "127.0.0.1";
+//  std::string str_server_ip = "127.0.0.1";
   std::string str_rsp;
   unsigned short server_port = 21;
 

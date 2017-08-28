@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1503891050 source:c:\users\puler\desktop\testowy\ftp_client-socket\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
+	"ftp.h"
+	<libssh/libssh.h>
+
+1503889476 c:\users\puler\desktop\testowy\ftp_client-socket\ftp.h
+	<winsock2.h>
+	<WS2tcpip.h>
+	<assert.h>
+	<fstream>
+	<iostream>
+

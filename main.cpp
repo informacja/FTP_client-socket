@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "ftp.h"
+#include <libssh/libssh.h>
+
 
 #define RCVBUFSIZE 32     /* Size of receive buffer */
 
@@ -20,6 +22,28 @@ int ftpRecvResponse(int sock, char * buf);
 
 int main(int argc, char *argv[])
 {
+//test
+ssh_session my_ssh_session;
+  int rc;
+  my_ssh_session = ssh_new();
+  if (my_ssh_session == NULL)
+    exit(-1);
+  ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "localhost");
+  rc = ssh_connect(my_ssh_session);
+  if (rc != SSH_OK)
+  {
+    fprintf(stderr, "Error connecting to localhost: %s\n",
+            ssh_get_error(my_ssh_session));
+    exit(-1);
+  }
+  //...
+  ssh_disconnect(my_ssh_session);
+  ssh_free(my_ssh_session);
+
+
+
+
+
     int sock;                          /*  Socket descriptor */
     int dataSock;              /* Data sockeet Descriptor*/
     int numberOfConn;
@@ -42,17 +66,17 @@ host_name = "";
                                  /* First arg' server IP address (dotted quad) */
 /*servlP = argv[0] ;*/
  servlP = "217.117.129.205";                                /* Second arg' string to echo */
- servlP = "127.0.0.1";                                /* Second arg' string to echo */
- host_name = "test";
- const char *pass = "test"; // password
+// servlP = "127.0.0.1";                                /* Second arg' string to echo */
+ host_name = "wawpi";
+ const char *pass = "ZAQ!2wsx"; // password
 
  ftpServPort = 21;
-//ftpServPort = 2731;
+ftpServPort = 2731;
 
  /*echoString = argv[2] ;*/
  char buf[1024];
 
- show_IPs( servlP);
+ show_IPs( servlP );
 
     WSADATA Data;
     WSAStartup(MAKEWORD(2, 2), &Data); // 2.2 version
@@ -83,18 +107,17 @@ host_name = "";
     {
         gethostname(host_name, PORTBUFFER);
 
-
-    cout << "hostname (" << host_name << "): ";
-    string buff = "";
-    getline(std::cin, buff);
-    if ( buff != "" )
-        strcpy( host_name, (const char*) &buff);
+        cout << "hostname (" << host_name << "): ";
+        string buff = "";
+        getline(std::cin, buff);
+        if ( buff != "" )
+            strcpy( host_name, (const char*) &buff);
     }
 
     login( sock, host_name, pass );
 
-    p = strcpy(command, "WebGrabber.exe");                    /// wybieramy co pobieramy
-    get_file(sock, command);
+    p = strcpy(command, "public_html/index.php");                    /// wybieramy co pobieramy
+    get_file( sock, servlP, command );
 
 
 //dataServPort = 20;
