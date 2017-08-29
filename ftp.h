@@ -3,6 +3,23 @@
 
 #include <winsock2.h>   /* for sockaddr_in and inet_addr() */
 #include <WS2tcpip.h>
+
+// #if defined(_WIN32) || defined(_WIN64)
+// // Windows (x86 or x64)
+// // ...
+// #elif defined(__linux__)
+// // Linux
+// // ...
+// #elif defined(__APPLE__) && defined(__MACH__)
+// // Mac OS
+// // ...
+// #elif defined(unix) || defined(__unix__) || defined(__unix)
+// // Unix like OS
+// // ...
+// #else
+// #error Unknown environment!
+// #endif
+
 #include <assert.h>     /* assert */
 #include <fstream>
 #include <iostream>
@@ -195,7 +212,7 @@ void receive_all(int sock, const char *file_name)
   remove(buf);
 
 
-/// przerobiæ na  fstream
+/// przerobiï¿½ na  fstream
     recv_size = 2191;
 //
 //    int file_desc = 0;
