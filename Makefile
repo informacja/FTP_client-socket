@@ -1,10 +1,11 @@
 all: main
 
-main.o: main.cpp ftp.h
-	g++ -c -g main.cpp ftp.h -std=c++11
+main.o: ftp.h main.cpp
+	g++ -c -g ftp.h main.cpp -std=c++11 -Wno-write-strings -Wno-format-security
 
 main: main.o
 	g++ -g -o main main.o
 
-clean:
+clena:
 	rm main main.o
+
